@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>这个页面走丢了捏… | Qinxi的个人博客</title>
+  <title>好伙伴们 | Qinxi的个人博客</title>
   
   <meta name="author" content="qinxi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
@@ -17,13 +17,17 @@
   
     <meta name="keywords" content="" />
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="这个页面走丢了捏…">
-<meta property="og:url" content="https://wqinxi.github.io/404.html">
+  <meta name="description" content="好伙伴们在哪里~">
+<meta property="og:type" content="website">
+<meta property="og:title" content="好伙伴们">
+<meta property="og:url" content="https://wqinxi.github.io/friends/index.html">
 <meta property="og:site_name" content="Qinxi的个人博客">
+<meta property="og:description" content="好伙伴们在哪里~">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://wqinxi.github.io/images/avatar.webp">
 <meta property="article:author" content="qinxi">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wqinxi.github.io/images/avatar.webp">
   
   <!-- 站点验证相关 -->
   
@@ -140,68 +144,123 @@
 
         
 
-            <!-- Additional Style -->
-<style>
-    .page404 {
-        padding: 0 5%
-    }
+            <section class="col-md-8">
 
-    .page404 img {
-        width:100%;
-        border-radius:15px;
-    }
+        
 
-    .page404 .back-p {
-        margin-right: 15px;
-        padding: 10px 20px;
-        border: 1px solid #51aded;
-        background: #51aded;
-        color: #fff;
-        line-height: 3
-    }
-
-    .page404 .back-p:hover {
-        background: #489cd7;
-        color: #fff !important
-    }
-
-    .page404 .back-index {
-        margin-left: 15px;
-        padding: 10px 20px;
-        border: 1px solid #f0f0f0;
-        background-color: #fafafa;
-        color: #767676;
-        line-height: 3
-    }
-
-    .page404 .back-index:hover {
-        border-color: #0092ee;
-        color: #0092ee
-    }
-</style>
-
-<!-- Main Content -->
-
-<div class="page404">
+            <article itemscope itemtype="https://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="">
     <div class="kratos-hentry kratos-post-inner clearfix">
-        <div class="col-md-7">
-            <img src="/images/404.webp" loading="eager" decoding="auto" />
-        </div>
-        <div class="col-md-5 text-center errtxt">
-            <h3>这个页面搬家啦</h3>
-            <h5>要不要试着回到主页找一找呢~</h5>
-            <p>
-                <a href="javascript:history.go(-1)" class="back-p">返回上页</a>
-                <a href="/" class="back-index">返回主页</a>
-            </p>
-        </div>
-    </div>
+        <div class="kratos-post-content">
+            <h2 class="title-h2 text-center" itemprop="name headline">好伙伴们</h2>
+            <div itemprop="articleBody"><div class="linkpage">
+    <ul id="friendsList"></ul>
 </div>
 
+<script type="text/javascript">
+{
+    const flist = [{"name":"Andrew Wang","link":"https://andreww1219.github.io/","avatar":"../images/avatarA.webp","bio":"人工智能 数据结构与算法"}];
+    let friendNodes = '';
+    while (flist.length > 0) {
+        const rndNum = Math.floor(Math.random()*flist.length);
+        friendNodes += `<li><a target="_blank" href="${flist[rndNum].link}"><img src="${flist[rndNum].avatar}" onerror="this.src='/images/avatar.webp';this.onerror=null;"><h4>${flist[rndNum].name}</h4><p>${flist[rndNum].bio}</p></a></li>`;
+        flist.splice(rndNum, 1);
+    }
+    document.getElementById("friendsList").innerHTML = friendNodes;
+}
+</script></div>
+        </div>
+        <footer class="kratos-entry-footer clearfix">
+            <div class="footer-tag clearfix">
+                <div class="pull-date">
+                    <time datetime="2024-01-29T00:00:00.000Z" itemprop="dateModified">最后编辑：2024-01-29</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    
+</article>
+
+        
+
+            </section>
 
         
 
                 
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+        <div class="sticky-area">
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="/images/avatar.webp" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center"></p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                1
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                0
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                0
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                
+
+            
+                
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/2024/01/28/hello-world/"><i class="fa  fa-book"></i> Hello World</a>
+            
+          
+        
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
         </div>
     </div>
 </div>
@@ -295,6 +354,8 @@
 
 
 
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
 <script defer src="/js/kratosr.min.js"></script>
 <script defer src="/js/pjax.min.js"></script>
