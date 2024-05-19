@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  <link rel="icon" href="/images/avatar.webp">
+  
+  <title>Pytorch训练图像分类网络 | Qinxi的个人博客</title>
+  
+  <meta name="author" content="qinxi" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="" />
+  
+  <meta name="description" content="机器人学导论实验：Training an image classifier 一、实验目的利用Pytorch在CPU&#x2F;GPU上训练一个图像分类网络 二、实验步骤 加载并预处理 CIFAR-10 数据集,包括划分训练集和测试集,并应用图像变换。 定义一个卷积神经网络模型结构。 定义损失函数和优化器,并利用训练集对模型进行训练。 保存训练好的模型。 使用测试集评估模型的性能,包括计算总体准确率以及各个类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch训练图像分类网络">
+<meta property="og:url" content="https://wqinxi.github.io/2024/05/19/Pytorch%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="Qinxi的个人博客">
+<meta property="og:description" content="机器人学导论实验：Training an image classifier 一、实验目的利用Pytorch在CPU&#x2F;GPU上训练一个图像分类网络 二、实验步骤 加载并预处理 CIFAR-10 数据集,包括划分训练集和测试集,并应用图像变换。 定义一个卷积神经网络模型结构。 定义损失函数和优化器,并利用训练集对模型进行训练。 保存训练好的模型。 使用测试集评估模型的性能,包括计算总体准确率以及各个类">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://wqinxi.github.io/2024/05/19/Pytorch%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/images/thumb/thumb_1.webp">
+<meta property="article:published_time" content="2024-05-19T02:33:54.453Z">
+<meta property="article:modified_time" content="2024-05-19T03:58:54.746Z">
+<meta property="article:author" content="qinxi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wqinxi.github.io/2024/05/19/Pytorch%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/images/thumb/thumb_1.webp">
+  
+  <!-- 站点验证相关 -->
+  
+    
+    
+    
+  
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
+  
+    <link rel="stylesheet" id="darkmode-css" href="/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
+    <script src="/js/kr-dark.min.js"></script>
+  
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+  
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+  
+  
+  <style>
+    
+    
+  </style>
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    
+                                    
+                                        
+                                            <li><a href="/"><i class="fa fa-home"></i>首页</a></li>
+                                        
+                                    
+                                        
+                                            <li><a href="/archives/"><i class="fa fa-file"></i>档案馆</a></li>
+                                        
+                                    
+                                        
+                                            <li><a href="/friends/"><i class="fa fa-paw"></i>好伙伴</a></li>
+                                        
+                                    
+                                        
+                                            <li>
+                                                <a><i class="fa fa-link"></i>链接</a>
+                                                <ul class="sub-menu">
+                                                    
+                                                        
+                                                    
+                                                        
+                                                            <li><a href="https://wqinxi.github.io/">作者博客</a></li>
+                                                        
+                                                    
+                                                        
+                                                            <li><a target="_blank" rel="noopener" href="https://github.com/Wqinxi">作者Github</a></li>
+                                                        
+                                                    
+                                                </ul>
+                                            </li>
+                                        
+                                    
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">Qinxi的个人博客</a></div>
+                    <div class="nav-toggle">
+                        <a class="kratos-nav-toggle js-kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>Qinxi的个人博客</h2> <br />
+                        <span>欢迎来到我的主页喵</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+                    
+
+        
+
+            <section class="col-md-8">
+
+        
+
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="https://wqinxi.github.io/2024/05/19/Pytorch%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">Pytorch训练图像分类网络</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2024-05-19T02:33:54.453Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2024-05-19</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">qinxi</span>
+                </li>
+                
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1716091134746"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
+            
+            
+            <hr />
+            <div itemprop="articleBody"><h2 id="机器人学导论实验：Training-an-image-classifier"><a href="#机器人学导论实验：Training-an-image-classifier" class="headerlink" title="机器人学导论实验：Training an image classifier"></a>机器人学导论实验：Training an image classifier</h2><hr>
+<h2 id="一、实验目的"><a href="#一、实验目的" class="headerlink" title="一、实验目的"></a>一、实验目的</h2><p>利用Pytorch在CPU/GPU上训练一个图像分类网络</p>
+<h2 id="二、实验步骤"><a href="#二、实验步骤" class="headerlink" title="二、实验步骤"></a>二、实验步骤</h2><ol>
+<li>加载并预处理 CIFAR-10 数据集,包括划分训练集和测试集,并应用图像变换。</li>
+<li>定义一个卷积神经网络模型结构。</li>
+<li>定义损失函数和优化器,并利用训练集对模型进行训练。</li>
+<li>保存训练好的模型。</li>
+<li>使用测试集评估模型的性能,包括计算总体准确率以及各个类别的准确率。</li>
+</ol>
+<h2 id="三、实验过程"><a href="#三、实验过程" class="headerlink" title="三、实验过程"></a>三、实验过程</h2><hr>
+<h4 id="1-使用pip安装Pytorch"><a href="#1-使用pip安装Pytorch" class="headerlink" title="1.    使用pip安装Pytorch"></a>1.    使用pip安装Pytorch</h4><p><img src="/images/using/picuse6.png" alt=""></p>
+<p>在Pytorch官网找到下载命令，以管理员模式进入命令行，切换到项目根目录输入命令</p>
+<p><img src="/images/using/picuse7.png" alt=""></p>
+<p>安装成功后，输入pip list确认已安装Pytorch</p>
+<p><img src="/images/using/picuse8.png" alt=""></p>
+<hr>
+<h4 id="2-使用Pytorch官网中训练图像分裂网络的代码，发现报错"><a href="#2-使用Pytorch官网中训练图像分裂网络的代码，发现报错" class="headerlink" title="2.    使用Pytorch官网中训练图像分裂网络的代码，发现报错"></a>2.    使用Pytorch官网中训练图像分裂网络的代码，发现报错</h4><p><img src="/images/using/picuse9.png" alt=""></p>
+<p>于是在代码前面部分加上</p>
+<p><img src="/images/using/picuse10.png" alt=""></p>
+<hr>
+<h4 id="3-将数据集下载到本地"><a href="#3-将数据集下载到本地" class="headerlink" title="3.    将数据集下载到本地"></a>3.    将数据集下载到本地</h4><p>下载运用网上数据集速度非常慢，因此我们将数据集下载到项目的根目录下</p>
+<p>进入官网找到下载方式</p>
+<p><img src="/images/using/picuse11.png" alt=""></p>
+<p>将下载的压缩包解压放在新的文件夹data中</p>
+<p><img src="/images/using/picuse12.png" alt=""></p>
+<p>并将download改成false，表示在本地读取数据集</p>
+<p><img src="/images/using/picuse13.png" alt=""></p>
+<hr>
+<h4 id="4-运行代码"><a href="#4-运行代码" class="headerlink" title="4.    运行代码"></a>4.    运行代码</h4><p>加载数据集并进行归一化（normalize）处理，便于后续对模型进行训练<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 实验：Training an image classifier</span></span><br><span class="line"><span class="comment"># Pytorch训练图像分类网络</span></span><br><span class="line"><span class="comment"># 报告人：韦沁曦</span></span><br><span class="line"><span class="comment"># 学号：2022280210</span></span><br><span class="line"><span class="comment"># 2024.5.15</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># First step:</span></span><br><span class="line"><span class="comment"># Load and normalize CIFAR10</span></span><br><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">import</span> torch</span><br><span class="line">    <span class="keyword">import</span> torchvision</span><br><span class="line">    <span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    transform = transforms.Compose(</span><br><span class="line">        [transforms.ToTensor(),</span><br><span class="line">         transforms.Normalize((<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>), (<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>))])</span><br><span class="line"></span><br><span class="line">    batch_size = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># download = False: load local dataset</span></span><br><span class="line">    trainset = torchvision.datasets.CIFAR10(root=<span class="string">&#x27;./data&#x27;</span>, train=<span class="literal">True</span>,</span><br><span class="line">                                            download=<span class="literal">False</span>, transform=transform)</span><br><span class="line">    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,</span><br><span class="line">                                              shuffle=<span class="literal">True</span>, num_workers=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    testset = torchvision.datasets.CIFAR10(root=<span class="string">&#x27;./data&#x27;</span>, train=<span class="literal">False</span>,</span><br><span class="line">                                           download=<span class="literal">True</span>, transform=transform)</span><br><span class="line">    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,</span><br><span class="line">                                             shuffle=<span class="literal">False</span>, num_workers=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    classes = (<span class="string">&#x27;plane&#x27;</span>, <span class="string">&#x27;car&#x27;</span>, <span class="string">&#x27;bird&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>,</span><br><span class="line">               <span class="string">&#x27;deer&#x27;</span>, <span class="string">&#x27;dog&#x27;</span>, <span class="string">&#x27;frog&#x27;</span>, <span class="string">&#x27;horse&#x27;</span>, <span class="string">&#x27;ship&#x27;</span>, <span class="string">&#x27;truck&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">    <span class="comment"># functions to show an image</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">imshow</span>(<span class="params">img</span>):</span><br><span class="line">        img = img / <span class="number">2</span> + <span class="number">0.5</span>     <span class="comment"># unnormalize</span></span><br><span class="line">        npimg = img.numpy()</span><br><span class="line">        plt.imshow(np.transpose(npimg, (<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>)))</span><br><span class="line">        plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># get some random training images</span></span><br><span class="line">    dataiter = <span class="built_in">iter</span>(trainloader)</span><br><span class="line">    images, labels = <span class="built_in">next</span>(dataiter)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># show images</span></span><br><span class="line">    imshow(torchvision.utils.make_grid(images))</span><br><span class="line">    <span class="comment"># print labels</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27; &#x27;</span>.join(<span class="string">f&#x27;<span class="subst">&#123;classes[labels[j]]:5s&#125;</span>&#x27;</span> <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(batch_size)))</span><br></pre></td></tr></table></figure></p>
+<p>显示处理后图像：</p>
+<p><img src="/images/using/picuse14.png" alt=""></p>
+<p>打印真实图像类别</p>
+<p><img src="/images/using/picuse15.png" alt=""></p>
+<hr>
+<p>搭建卷积神经网络，定义前向传播为进行两轮卷积、激活、池化，并拉成一个向量</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Second step:</span></span><br><span class="line">    <span class="comment"># Define a Convolutional Neural Network</span></span><br><span class="line">    <span class="comment"># 定义卷积神经网络</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line">    <span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Net</span>(nn.Module):</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">            <span class="built_in">super</span>().__init__()</span><br><span class="line">            self.conv1 = nn.Conv2d(<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>)</span><br><span class="line">            self.pool = nn.MaxPool2d(<span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line">            self.conv2 = nn.Conv2d(<span class="number">6</span>, <span class="number">16</span>, <span class="number">5</span>)</span><br><span class="line">            self.fc1 = nn.Linear(<span class="number">16</span> * <span class="number">5</span> * <span class="number">5</span>, <span class="number">120</span>)</span><br><span class="line">            self.fc2 = nn.Linear(<span class="number">120</span>, <span class="number">84</span>)</span><br><span class="line">            self.fc3 = nn.Linear(<span class="number">84</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">            x = self.pool(F.relu(self.conv1(x)))</span><br><span class="line">            x = self.pool(F.relu(self.conv2(x)))</span><br><span class="line">            x = torch.flatten(x, <span class="number">1</span>) <span class="comment"># flatten all dimensions except batch</span></span><br><span class="line">            x = F.relu(self.fc1(x))</span><br><span class="line">            x = F.relu(self.fc2(x))</span><br><span class="line">            x = self.fc3(x)</span><br><span class="line">            <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    net = Net()</span><br></pre></td></tr></table></figure>
+<p>定义损失函数和优化器SGD</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Third step:</span></span><br><span class="line">    <span class="comment"># Define a Loss function and optimizer</span></span><br><span class="line">    <span class="comment"># 定义损失函数和优化器</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"></span><br><span class="line">    criterion = nn.CrossEntropyLoss()</span><br><span class="line">    optimizer = optim.SGD(net.parameters(), lr=<span class="number">0.001</span>, momentum=<span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+<p>对网络进行训练</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Fourth step:</span></span><br><span class="line">    <span class="comment"># Train the network</span></span><br><span class="line">    <span class="comment"># 训练网络</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>):  <span class="comment"># loop over the dataset multiple times</span></span><br><span class="line"></span><br><span class="line">        running_loss = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">for</span> i, data <span class="keyword">in</span> <span class="built_in">enumerate</span>(trainloader, <span class="number">0</span>):</span><br><span class="line">            <span class="comment"># get the inputs; data is a list of [inputs, labels]</span></span><br><span class="line">            inputs, labels = data</span><br><span class="line"></span><br><span class="line">            <span class="comment"># zero the parameter gradients</span></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># forward + backward + optimize</span></span><br><span class="line">            outputs = net(inputs)</span><br><span class="line">            loss = criterion(outputs, labels)</span><br><span class="line">            loss.backward()</span><br><span class="line">            optimizer.step()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># print statistics</span></span><br><span class="line">            running_loss += loss.item()</span><br><span class="line">            <span class="keyword">if</span> i % <span class="number">2000</span> == <span class="number">1999</span>:  <span class="comment"># print every 2000 mini-batches</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&#x27;[<span class="subst">&#123;epoch + <span class="number">1</span>&#125;</span>, <span class="subst">&#123;i + <span class="number">1</span>:5d&#125;</span>] loss: <span class="subst">&#123;running_loss / <span class="number">2000</span>:<span class="number">.3</span>f&#125;</span>&#x27;</span>)</span><br><span class="line">                running_loss = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Finished Training&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    PATH = <span class="string">&#x27;./cifar_net.pth&#x27;</span></span><br><span class="line">    torch.save(net.state_dict(), PATH)</span><br></pre></td></tr></table></figure>
+<p>训练结果：</p>
+<p><img src="/images/using/picuse16.png" alt=""></p>
+<p>由图可观察到，损失函数逐渐降低</p>
+<hr>
+<p>对网络进行测试，计算准确度</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Fifth step:</span></span><br><span class="line">    <span class="comment"># Test the network on the test data</span></span><br><span class="line">    <span class="comment"># 用测试数据集测试网络</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    dataiter = <span class="built_in">iter</span>(testloader)</span><br><span class="line">    images, labels = <span class="built_in">next</span>(dataiter)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># print images</span></span><br><span class="line">    imshow(torchvision.utils.make_grid(images))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;GroundTruth: &#x27;</span>, <span class="string">&#x27; &#x27;</span>.join(<span class="string">f&#x27;<span class="subst">&#123;classes[labels[j]]:5s&#125;</span>&#x27;</span> <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>)))</span><br><span class="line"></span><br><span class="line">    net = Net()</span><br><span class="line">    net.load_state_dict(torch.load(PATH))</span><br><span class="line"></span><br><span class="line">    outputs = net(images)</span><br><span class="line"></span><br><span class="line">    _, predicted = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Predicted: &#x27;</span>, <span class="string">&#x27; &#x27;</span>.join(<span class="string">f&#x27;<span class="subst">&#123;classes[predicted[j]]:5s&#125;</span>&#x27;</span></span><br><span class="line">                                  <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    correct = <span class="number">0</span></span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="comment"># since we&#x27;re not training, we don&#x27;t need to calculate the gradients for our outputs</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> data <span class="keyword">in</span> testloader:</span><br><span class="line">            images, labels = data</span><br><span class="line">            <span class="comment"># calculate outputs by running images through the network</span></span><br><span class="line">            outputs = net(images)</span><br><span class="line">            <span class="comment"># the class with the highest energy is what we choose as prediction</span></span><br><span class="line">            _, predicted = torch.<span class="built_in">max</span>(outputs.data, <span class="number">1</span>)</span><br><span class="line">            total += labels.size(<span class="number">0</span>)</span><br><span class="line">            correct += (predicted == labels).<span class="built_in">sum</span>().item()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;Accuracy of the network on the 10000 test images: <span class="subst">&#123;<span class="number">100</span> * correct // total&#125;</span> %&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># prepare to count predictions for each class</span></span><br><span class="line">    correct_pred = &#123;classname: <span class="number">0</span> <span class="keyword">for</span> classname <span class="keyword">in</span> classes&#125;</span><br><span class="line">    total_pred = &#123;classname: <span class="number">0</span> <span class="keyword">for</span> classname <span class="keyword">in</span> classes&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># again no gradients needed</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> data <span class="keyword">in</span> testloader:</span><br><span class="line">            images, labels = data</span><br><span class="line">            outputs = net(images)</span><br><span class="line">            _, predictions = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)</span><br><span class="line">            <span class="comment"># collect the correct predictions for each class</span></span><br><span class="line">            <span class="keyword">for</span> label, prediction <span class="keyword">in</span> <span class="built_in">zip</span>(labels, predictions):</span><br><span class="line">                <span class="keyword">if</span> label == prediction:</span><br><span class="line">                    correct_pred[classes[label]] += <span class="number">1</span></span><br><span class="line">                total_pred[classes[label]] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># print accuracy for each class</span></span><br><span class="line">    <span class="keyword">for</span> classname, correct_count <span class="keyword">in</span> correct_pred.items():</span><br><span class="line">        accuracy = <span class="number">100</span> * <span class="built_in">float</span>(correct_count) / total_pred[classname]</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;Accuracy for class: <span class="subst">&#123;classname:5s&#125;</span> is <span class="subst">&#123;accuracy:<span class="number">.1</span>f&#125;</span> %&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>显示出预测图像</p>
+<p><img src="/images/using/picuse17.png" alt=""></p>
+<p>打印真实图像和预测图像的类别，并打印出训练后网络的预测图像准确度</p>
+<p><img src="/images/using/picuse18.png" alt=""></p>
+<p>逐行打印每个类别的准确度    </p>
+<p><img src="/images/using/picuse19.png" alt=""></p>
+</div>
+        </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
+    </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "https://wqinxi.github.io/2024/05/19/Pytorch%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "https://wqinxi.github.io/2024/05/19/Pytorch%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/";
+            const title         = "「Pytorch训练图像分类网络」";
+            const excerpt       = `机器人学导论实验：Training an image classifier
+一、实验目的利用Pytorch在CPU/GPU上训练一个图像分类网络
+二、实验步骤
+加载并预处理 CIFAR-10 数据集,包括划分训练集和测试集,并应用图像...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    
+                </div>
+                <div class="pull-date">
+                    <time datetime="2024-05-19T03:58:54.746Z" itemprop="dateModified">最后编辑：2024-05-19</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" 踩坑日记" href="/2024/03/27/踩坑日记/">&lt; 上一篇</a>
+            </div>
+            
+            
+        </nav>
+    
+    
+</article>
+
+        
+
+            </section>
+
+        
+
+                
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="/images/avatar.webp" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center"></p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                2
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                0
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                0
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                    <div class="sticky-area">
+                
+                
+
+            
+                
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/2024/05/19/Pytorch%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/"><i class="fa  fa-book"></i> Pytorch训练图像分类网络</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2024/03/27/%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0/"><i class="fa  fa-book"></i> 踩坑日记</a>
+            
+          
+        
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
+        </div>
+    </div>
+</div>
+<footer>
+    <div id="footer"  >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        <!-- Keep for compatibility -->
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- New links -->
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2024 Qinxi的个人博客 版权所有.</li>
+                            <li>本站已运行<span id="span_dt">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
+                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by qinxi.</li>
+                        </div>
+                        <div>
+                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
+                            <li>Hosted on <a href="https://github.io" target="_blank">Github Pages</a></li>
+                        </div>
+                        <div>
+                            
+                            
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search/">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="box theme-box" id="darkmode-switch">
+                        <span class="fa fa-adjust"></span>
+                    </div>
+                
+                
+                    <div class="box theme-box" id="snow-switch">
+                        <span class="fa fa-snowflake-o"></span>
+                    </div>
+                
+                
+            </div>
+            <div class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+    <div>
+        <canvas id="snow"></canvas>
+        <script async src="/js/snow.min.js"></script>
+    </div>
+
+
+    <script async src="/js/candy.min.js"></script>
+
+
+
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
+
+
+
+<!-- Extra support for third-party plguins  -->
+
+
+    </body>
+</html>
