@@ -17,16 +17,16 @@
   
     <meta name="keywords" content="" />
   
-  <meta name="description" content="一、研究背景近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。但是存在两个问题：  从对生活中知识的建模与学习中，解释视觉的输入和加强交流互动 表现出能够考虑周围物理环境和人类动作及意图的智能的行为  因为人类会在连续的动作中表达意图，理解上下文语义对">
+  <meta name="description" content="一、研究背景近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。但是机器人在两个方面具有挑战：  从对生活中知识的建模与学习中，解释视觉的输入和加强交流互动 表现出能够考虑周围物理环境和人类动作及意图的智能的行为  因为人类会在连续的动作中表达意图，理解">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【论文梳理】Understanding Contexts Inside Robot and Human Manipulation Tasks through Vision-Language Model and Ontology System in Video Streams">
 <meta property="og:url" content="https://wqinxi.github.io/2024/05/31/%E8%AE%BA%E6%96%87%E6%B1%87%E6%8A%A5/index.html">
 <meta property="og:site_name" content="Qinxi的个人博客">
-<meta property="og:description" content="一、研究背景近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。但是存在两个问题：  从对生活中知识的建模与学习中，解释视觉的输入和加强交流互动 表现出能够考虑周围物理环境和人类动作及意图的智能的行为  因为人类会在连续的动作中表达意图，理解上下文语义对">
+<meta property="og:description" content="一、研究背景近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。但是机器人在两个方面具有挑战：  从对生活中知识的建模与学习中，解释视觉的输入和加强交流互动 表现出能够考虑周围物理环境和人类动作及意图的智能的行为  因为人类会在连续的动作中表达意图，理解">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://wqinxi.github.io/2024/05/31/%E8%AE%BA%E6%96%87%E6%B1%87%E6%8A%A5/images/thumb/thumb_2.webp">
 <meta property="article:published_time" content="2024-05-31T05:31:57.861Z">
-<meta property="article:modified_time" content="2024-05-31T15:58:10.769Z">
+<meta property="article:modified_time" content="2024-05-31T16:55:30.513Z">
 <meta property="article:author" content="qinxi">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://wqinxi.github.io/2024/05/31/%E8%AE%BA%E6%96%87%E6%B1%87%E6%8A%A5/images/thumb/thumb_2.webp">
@@ -172,13 +172,13 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1717171090769"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1717174530513"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="一、研究背景"><a href="#一、研究背景" class="headerlink" title="一、研究背景"></a>一、研究背景</h1><p>近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。<br>但是存在两个问题：</p>
+            <div itemprop="articleBody"><h1 id="一、研究背景"><a href="#一、研究背景" class="headerlink" title="一、研究背景"></a>一、研究背景</h1><p>近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。<br>但是机器人在两个方面具有挑战：</p>
 <ol>
 <li>从对生活中知识的建模与学习中，解释视觉的输入和加强交流互动</li>
 <li>表现出能够考虑周围物理环境和人类动作及意图的智能的行为</li>
@@ -302,9 +302,7 @@
             const twitterBase   = "https://twitter.com/intent/tweet?";
             const hostUrl       = "https://wqinxi.github.io/2024/05/31/%E8%AE%BA%E6%96%87%E6%B1%87%E6%8A%A5/";
             const title         = "「【论文梳理】Understanding Contexts Inside Robot and Human Manipulation Tasks through Vision-Language Model and Ontology System in Video Streams」";
-            const excerpt       = `一、研究背景近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。但是存在两个问题：
-
-从...`;
+            const excerpt       = `一、研究背景近期，将计算机视觉与语言知识融合的进步,使研究人员能够利用上下文语义，给智能机器人建模人类式的常识性知识。机器人视觉和自然语言处理的研究给了机器人有力的工具，让机器人能更好地理解人的行为并帮助人类。但是机器人在两个方面具有...`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -326,7 +324,7 @@
                     
                 </div>
                 <div class="pull-date">
-                    <time datetime="2024-05-31T15:58:10.769Z" itemprop="dateModified">最后编辑：2024-05-31</time>
+                    <time datetime="2024-05-31T16:55:30.513Z" itemprop="dateModified">最后编辑：2024-06-01</time>
                 </div>
             </div>
         </footer>
